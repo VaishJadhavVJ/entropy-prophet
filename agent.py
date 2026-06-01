@@ -17,56 +17,103 @@ N_SAMPLES = 3  # self-consistency runs per event
 def call_glm(event: dict) -> tuple[dict, str]:
     """Single LLM call. Returns (probabilities dict, raw reasoning text)."""
     outcomes = event["outcomes"]
-    outcomes_str = json.dumps(outcomes)
     
-    prompt = f"""You are an expert forecasting agent. Analyze this prediction market event carefully.
+    # for large outcome lists, only ask about top candidates
+    # GLM struggles to output JSON with 15-30 outcomes
+    if len(outcomes) > 8:
+        outcomes_to_use = outcomes[:8]
+        has_truncated = True
+    else:
+        outcomes_to_use = outcomes
+        has_truncated = False
+    
+    outcomes_str = json.dumps(outcomes_to_use)
+    
+    prompt = f"""You are an expert forecasting agent.
 
 Event: {event['title']}
-Description: {event['description']}
+Description: {event.get('description', '')}
 Category: {event['category']}
-Rules: {event['rules']}
-Outcomes: {outcomes_str}
+Rules: {event.get('rules', '')}
 
-Think through this step by step:
-1. What do you know about this topic?
-2. What factors influence the outcome?
-3. How confident are you at each reasoning step?
-4. What is your final probability estimate?
+Outcomes to evaluate: {outcomes_str}
 
-Return ONLY valid JSON in this exact format:
+Instructions:
+1. Think through what you know about this topic
+2. For each reasoning step, rate your confidence (0.0 to 1.0)
+3. Assign a probability to each outcome
+4. Probabilities must sum to exactly 1.0
+
+Return ONLY this JSON, no other text, no markdown:
 {{
   "reasoning_steps": [
-    {{"step": "step description", "confidence": 0.0-1.0}},
-    {{"step": "step description", "confidence": 0.0-1.0}}
+    {{"step": "your reasoning here", "confidence": 0.8}},
+    {{"step": "your reasoning here", "confidence": 0.7}}
   ],
   "probabilities": {{
-    {", ".join([f'"{o}": 0.0' for o in outcomes])}
+    {", ".join([f'"{o}": 0.0' for o in outcomes_to_use])}
   }}
-}}
+}}"""
 
-Probabilities must sum to 1.0."""
-
-    response = client.chat.completions.create(
-        model="glm-5.1",
-        messages=[{"role": "user", "content": prompt}],
-        temperature=0.7,  # some variance for self-consistency
-        max_tokens=2500
-    )
-    
-    raw_text = response.choices[0].message.content
-    print(f"DEBUG RAW: {raw_text[:500]}")
-    
-    # parse JSON from response
-    clean = raw_text.strip()
-    if clean.startswith("```"):
-        clean = clean.split("\n", 1)[1]
-    if clean.endswith("```"):
-        clean = clean.rsplit("```", 1)[0]
-    start = clean.find("{")
-    end = clean.rfind("}") + 1
-    parsed = json.loads(repair_json(clean[start:end]))
-    
-    return parsed, raw_text
+    try:
+        response = client.chat.completions.create(
+            model="glm-5.1",
+            messages=[
+                {
+                    "role": "system", 
+                    "content": "You are a precise forecasting agent. Always respond with valid JSON only. No markdown, no explanation outside the JSON."
+                },
+                {
+                    "role": "user", 
+                    "content": prompt
+                }
+            ],
+            temperature=0.7,
+            max_tokens=2000
+        )
+        
+        raw_text = response.choices[0].message.content
+        
+        if not raw_text or not raw_text.strip():
+            raise ValueError("Empty response from GLM")
+        
+        # clean markdown fences
+        clean = raw_text.strip()
+        for fence in ["```json", "```JSON", "```"]:
+            if clean.startswith(fence):
+                clean = clean[len(fence):]
+                break
+        if clean.endswith("```"):
+            clean = clean[:-3]
+        clean = clean.strip()
+        
+        # extract JSON object
+        start = clean.find("{")
+        end = clean.rfind("}") + 1
+        
+        if start == -1 or end == 0:
+            raise ValueError("No JSON object found in response")
+        
+        json_str = clean[start:end]
+        parsed = json.loads(repair_json(json_str))
+        
+        # validate probabilities key exists
+        if "probabilities" not in parsed:
+            raise ValueError("No probabilities key in response")
+        
+        # if we truncated outcomes, distribute remaining probability uniformly
+        if has_truncated:
+            remaining_outcomes = outcomes[8:]
+            total_assigned = sum(parsed["probabilities"].values())
+            remaining_prob = max(0, 1.0 - total_assigned)
+            per_remaining = remaining_prob / len(remaining_outcomes) if remaining_outcomes else 0
+            for o in remaining_outcomes:
+                parsed["probabilities"][o] = per_remaining
+        
+        return parsed, raw_text
+        
+    except Exception as e:
+        raise ValueError(f"call_glm failed: {e}")
 
 
 def compute_entropy(samples: list[dict], outcomes: list[str]) -> dict:

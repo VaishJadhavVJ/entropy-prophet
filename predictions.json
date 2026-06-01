@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-06-01T22:00:12.750714Z",
+  "timestamp": "2026-06-01T22:20:40.778370Z",
   "predictions": [
     {
       "market_ticker": "KXNBAEAST-26",
@@ -8,8 +8,8 @@
     },
     {
       "market_ticker": "KXNBAWEST-26",
-      "p_yes": 0.5,
-      "rationale": "fallback uniform"
+      "p_yes": 0.1781,
+      "rationale": "multi-outcome: entropy=0.0029"
     },
     {
       "market_ticker": "KXNBA-26",
