@@ -1,0 +1,25 @@
+{
+  "timestamp": "2026-06-01T22:00:12.750714Z",
+  "predictions": [
+    {
+      "market_ticker": "KXNBAEAST-26",
+      "p_yes": 0.5,
+      "rationale": "fallback uniform"
+    },
+    {
+      "market_ticker": "KXNBAWEST-26",
+      "p_yes": 0.5,
+      "rationale": "fallback uniform"
+    },
+    {
+      "market_ticker": "KXNBA-26",
+      "p_yes": 0.5,
+      "rationale": "fallback uniform"
+    },
+    {
+      "market_ticker": "KXNHLHART-26",
+      "p_yes": 0.5,
+      "rationale": "fallback uniform"
+    }
+  ]
+}
