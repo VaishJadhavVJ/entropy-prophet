@@ -1,0 +1,60 @@
+{
+  "timestamp": "2026-06-01T22:58:48.192172Z",
+  "predictions": [
+    {
+      "market_ticker": "KXECONSTATCPIYOY-26MAY",
+      "p_yes": 0.1357,
+      "rationale": "multi-outcome: entropy=0.0034"
+    },
+    {
+      "market_ticker": "KXECONSTATCPICORE-26MAY",
+      "p_yes": 0.2416,
+      "rationale": "multi-outcome: entropy=0.0063"
+    },
+    {
+      "market_ticker": "KXCBDECISIONJAPAN-26JUN15",
+      "p_yes": 0.345,
+      "rationale": "multi-outcome: entropy=0.0037"
+    },
+    {
+      "market_ticker": "KXCBDECISIONAUSTRALIA-26JUN16",
+      "p_yes": 0.3485,
+      "rationale": "multi-outcome: entropy=0.0077"
+    },
+    {
+      "market_ticker": "KXESGDPQOQF-26JUN25",
+      "p_yes": 0.5,
+      "rationale": "fallback uniform"
+    },
+    {
+      "market_ticker": "KXUSTYLD-10Y26JUN30",
+      "p_yes": 0.5,
+      "rationale": "fallback uniform"
+    },
+    {
+      "market_ticker": "KXECONSTATCORECPIYOY-26JUN",
+      "p_yes": 0.1551,
+      "rationale": "multi-outcome: entropy=0.0028"
+    },
+    {
+      "market_ticker": "KXECONSTATCPI-26JUN",
+      "p_yes": 0.2238,
+      "rationale": "multi-outcome: entropy=0.0043"
+    },
+    {
+      "market_ticker": "KXCBDECISIONCANADA-26JUL",
+      "p_yes": 0.3988,
+      "rationale": "multi-outcome: entropy=0.0078"
+    },
+    {
+      "market_ticker": "KXFED-26SEP",
+      "p_yes": 0.5,
+      "rationale": "fallback uniform"
+    },
+    {
+      "market_ticker": "KXAAAGASED-26NOV03",
+      "p_yes": 0.5,
+      "rationale": "fallback uniform"
+    }
+  ]
+}
