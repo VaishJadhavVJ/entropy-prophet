@@ -1,22 +1,72 @@
-# entropy-prophet
+# Entropy Prophet
 
-`entropy-prophet` is a proof-of-concept system that tests whether **reasoning-step entropy** in Large Language Model (LLM) chain-of-thought (CoT), combined with **prediction market liquidity**, can be used to recalibrate the LLM's forecast probabilities on prediction market events.
+**Entropy-based calibration for LLM prediction market forecasting**
 
-The predictions are evaluated against events from **Prophet Arena** (or its mock data representations).
+Live dashboard: https://entropy-prophet-dashboard.vercel.app
 
-## Core Idea
-1. **Reasoning-Step Entropy (CoT Entropy):** 
-   When an LLM generates a Chain of Thought (CoT), we analyze its token or reasoning-step transitions. Higher entropy across multiple generated paths or during step-by-step reasoning denotes a lack of confidence or higher epistemic uncertainty.
-2. **Market Liquidity:** 
-   Prediction markets provide strong consensus signals, but low-liquidity markets might be highly volatile or mispriced. High liquidity represents robust consensus.
-3. **Probability Recalibration:** 
-   We combine the LLM's subjective forecast confidence (and its structural reasoning entropy) with market-state metrics (like depth, volume, or spread) to perform Bayesian or log-odds recalibration of the forecast probability, producing a more accurate and robust probability estimate.
+---
+
+## The Problem
+
+LLMs achieve strong forecasting accuracy on prediction market events but consistently underperform market baselines in terms of returns. The gap is calibration — models output overconfident probabilities, especially near event resolution when their knowledge is stale but the market is updating in real time.
+
+## The Hypothesis
+
+Reasoning-step entropy, measured via self-consistency sampling, is a real-time calibration signal. When an LLM's reasoning steps show high variance across multiple runs, the model's confidence is inflated. Compressing that probability toward uncertainty improves calibration without touching accuracy.
+
+## Background
+
+This project is motivated by a key finding in *LLM-as-a-Prophet: Understanding Predictive Intelligence with Prophet Arena* (Yang et al., arXiv:2510.17638): LLMs achieve strong forecasting accuracy on prediction market events but consistently underperform market baselines in terms of returns. The paper identifies several bottlenecks — including slower information aggregation near resolution and miscalibrated confidence.
+
+This project proposes entropy-based recalibration as a mechanism to close that gap. The approach is grounded in prior work on Process Reward Models (PRM) and entropy-based selective step verification in LLM reasoning chains, extended to the prediction market calibration problem.
+
+Evaluation uses [Prophet Arena](https://prophetarena.co) as the live benchmark.
+
+## Architecture
+
+**Layer 1 — Built**
+- Internal entropy via GLM-5.1 self-consistency sampling (N=3 runs)
+- Shannon entropy computation across reasoning steps
+- Entropy-weighted recalibration of output probability
+
+**Layer 2 — In Progress**
+- Cross-source disagreement signal (multi-model entropy)
+- Price insurgency detection (market surprise calibration)
+
+## Results
+
+First real Brier scores incoming **June 10, 2026** when CPI resolves.
+
+Benchmark: **Prophet Arena** — evaluated on macroeconomic prediction market events (Fed decisions, CPI, central bank rates).
+
+## Stack
+
+| Component | Technology |
+|---|---|
+| Forecasting agent | Python, GLM-5.1 (ZhipuAI), OpenAI-compatible API |
+| Benchmark | Prophet Arena CLI |
+| Dashboard | Next.js 16, Recharts, Tailwind CSS |
 
 ## Project Structure
-- `src/entropy_prophet/`: Core Python library.
-  - `models.py`: Data models for Prediction Events, Market States, and CoT steps.
-  - `entropy.py`: Logic for calculating reasoning-step and token transitions entropy.
-  - `recalibration.py`: Algorithms combining entropy and liquidity to produce recalibrated probabilities.
-  - `prophet_arena.py`: Interface to load/mock prediction market data from Prophet Arena.
-- `tests/`: Automated unit tests.
-- `demo.py`: Executable workflow showcasing the pipeline.
+
+```
+entropy-prophet/
+├── src/entropy_prophet/
+│   ├── models.py          # Prediction events, market states, CoT steps
+│   ├── entropy.py         # Shannon entropy over reasoning steps
+│   ├── recalibration.py   # Entropy-weighted probability recalibration
+│   └── prophet_arena.py   # Prophet Arena interface
+├── agent.py               # GLM-5.1 self-consistency sampling agent
+├── predictions_econ.json  # Latest predictions (read by dashboard)
+├── events_econ.json       # Macroeconomic event definitions
+├── entropy-prophet-dashboard/  # Next.js live dashboard
+└── tests/
+```
+
+## References
+
+Yang et al. (2025). *LLM-as-a-Prophet: Understanding Predictive Intelligence with Prophet Arena*. arXiv:2510.17638. University of Chicago / Haifeng Xu et al.
+
+---
+
+**Author:** Vaishnavi Jadhav · [github.com/VaishJadhavVJ](https://github.com/VaishJadhavVJ)
