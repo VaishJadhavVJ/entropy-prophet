@@ -1,47 +1,45 @@
 @import "tailwindcss";
 
-/* Force light mode — no system dark mode can override this */
 :root {
   color-scheme: light;
 }
 
 html {
-  background: #f5f0e8;
+  background: #dce1de;
 }
 
 body {
-  background: #f5f0e8;
-  color: #1a2744;
+  background: #dce1de;
+  color: #1f2421;
   font-family: Georgia, 'Times New Roman', serif;
   min-height: 100vh;
   margin: 0;
 }
 
-/* Headings: Playfair Display loaded via next/font */
 h1, h2, h3, h4 {
   font-family: var(--font-playfair), Georgia, 'Times New Roman', serif;
-  color: #1a2744;
+  color: #216869;
   font-weight: 700;
 }
 
-/* ─── Graph paper: only used on the hero section ─── */
+/* ─── Graph paper: hero section only ─── */
 .hero-graph {
-  background-color: #f5f0e8;
+  background-color: #dce1de;
   background-image:
-    linear-gradient(rgba(26, 39, 68, 0.09) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(26, 39, 68, 0.09) 1px, transparent 1px),
-    linear-gradient(rgba(26, 39, 68, 0.04) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(26, 39, 68, 0.04) 1px, transparent 1px);
+    linear-gradient(rgba(33, 104, 105, 0.13) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(33, 104, 105, 0.13) 1px, transparent 1px),
+    linear-gradient(rgba(33, 104, 105, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(33, 104, 105, 0.05) 1px, transparent 1px);
   background-size: 80px 80px, 80px 80px, 16px 16px, 16px 16px;
 }
 
-/* ─── Paper card: white, warm drop shadow, slight isometric tilt ─── */
+/* ─── Paper card: white, teal-tinted shadow, isometric tilt ─── */
 .paper-card {
   background: #ffffff;
-  border: 1px solid rgba(26, 39, 68, 0.1);
+  border: 1px solid rgba(33, 104, 105, 0.18);
   box-shadow:
-    2px 4px 0 rgba(140, 100, 40, 0.14),
-    4px 10px 22px rgba(140, 100, 40, 0.08);
+    2px 4px 0 rgba(33, 104, 105, 0.12),
+    4px 10px 22px rgba(33, 104, 105, 0.07);
   transform: perspective(800px) rotateX(2deg) rotateY(-1deg);
   transition: transform 0.22s ease, box-shadow 0.22s ease;
 }
@@ -49,11 +47,11 @@ h1, h2, h3, h4 {
 .paper-card:hover {
   transform: perspective(800px) rotateX(0deg) rotateY(0deg) translateY(-6px);
   box-shadow:
-    3px 12px 0 rgba(140, 100, 40, 0.18),
-    6px 20px 32px rgba(140, 100, 40, 0.12);
+    3px 12px 0 rgba(33, 104, 105, 0.16),
+    6px 20px 32px rgba(33, 104, 105, 0.10);
 }
 
-/* ─── Rubber stamp: red ink, rotated, uppercase monospace ─── */
+/* ─── Rubber stamp: red ink, rotated ─── */
 .rubber-stamp {
   display: inline-block;
   color: #b91c1c;

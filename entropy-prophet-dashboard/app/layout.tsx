@@ -29,9 +29,9 @@ export default function RootLayout({
       lang="en"
       className={`${playfair.variable} ${spaceMono.variable}`}
       /* Inline style guarantees light background even in dark-mode OS */
-      style={{ background: "#f5f0e8", colorScheme: "light" }}
+      style={{ background: "#dce1de", colorScheme: "light" }}
     >
-      <body style={{ background: "#f5f0e8", color: "#1a2744", margin: 0 }}>
+      <body style={{ background: "#dce1de", color: "#1f2421", margin: 0 }}>
         {children}
       </body>
     </html>

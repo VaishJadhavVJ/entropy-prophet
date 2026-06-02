@@ -25,8 +25,7 @@ function parseRationale(rationale: string): Pick<Prediction, "entropy" | "weight
 }
 
 export async function getPredictions(): Promise<Prediction[]> {
-  // Read the live file from the parent entropy-prophet project, not a stale public/ copy
-  const filePath = path.resolve(process.cwd(), "..", "predictions_econ.json");
+  const filePath = path.join(process.cwd(), "public", "predictions_econ.json");
   const raw = await fs.readFile(filePath, "utf-8");
   const json = JSON.parse(raw) as { predictions: RawPrediction[] };
   return json.predictions.map((p) => ({ ...p, ...parseRationale(p.rationale) }));

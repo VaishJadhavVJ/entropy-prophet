@@ -1,8 +1,11 @@
-const INK = "#1a2744";
-const INK_MID = "rgba(26,39,68,0.5)";
-const BORDER = "rgba(26,39,68,0.12)";
-const MONO = "var(--font-space-mono), 'Courier New', monospace";
-const SERIF = "var(--font-playfair), Georgia, serif";
+const INK     = "#1f2421";
+const INK_MID = "rgba(31,36,33,0.55)";
+const TEAL    = "#216869";
+const GREEN   = "#49a078";
+const LIGHT   = "#9cc5a1";
+const BORDER  = "rgba(33,104,105,0.18)";
+const MONO    = "var(--font-space-mono), 'Courier New', monospace";
+const SERIF   = "var(--font-playfair), Georgia, serif";
 
 const SIGNALS = [
   {
@@ -39,19 +42,16 @@ function StatusTag({ status }: { status: "active" | "soon" }) {
       letterSpacing: "2px",
       textTransform: "uppercase" as const,
       padding: "2px 7px",
-      border: `1.5px solid ${isActive ? INK : BORDER}`,
-      color: isActive ? INK : INK_MID,
-      background: isActive ? "rgba(26,39,68,0.05)" : "transparent",
+      border: `1.5px solid ${isActive ? TEAL : LIGHT}`,
+      color: isActive ? TEAL : INK_MID,
+      background: isActive ? "rgba(33,104,105,0.07)" : "rgba(156,197,161,0.15)",
     }}>
       {isActive ? "● active" : "coming soon"}
     </span>
   );
 }
 
-/* Hand-drawn SVG pipeline: LLM Samples → Entropy H(X) → Calibrated P */
 function PipelineDiagram() {
-  const ink = INK;
-  const ghost = "rgba(26,39,68,0.15)";
   return (
     <svg
       viewBox="0 0 720 88"
@@ -61,33 +61,33 @@ function PipelineDiagram() {
       aria-hidden="true"
     >
       {/* Box 1 */}
-      <rect x="8" y="22" width="150" height="44" rx="1" stroke={ink} strokeWidth="1.5" fill="white" />
-      <rect x="11" y="25" width="150" height="44" rx="1" stroke={ghost} strokeWidth="1" fill="none" />
-      <text x="83" y="42" textAnchor="middle" fontFamily={MONO} fontSize="10" fill={ink} fontWeight="700" letterSpacing="1">LLM SAMPLES</text>
-      <text x="83" y="57" textAnchor="middle" fontFamily={MONO} fontSize="9" fill={ink} opacity="0.45">temp &gt; 0, n=10</text>
+      <rect x="8" y="22" width="150" height="44" rx="1" stroke={TEAL} strokeWidth="1.5" fill="white" />
+      <rect x="11" y="25" width="150" height="44" rx="1" stroke={LIGHT} strokeWidth="1" fill="none" />
+      <text x="83" y="42" textAnchor="middle" fontFamily={MONO} fontSize="10" fill={TEAL} fontWeight="700" letterSpacing="1">LLM SAMPLES</text>
+      <text x="83" y="57" textAnchor="middle" fontFamily={MONO} fontSize="9" fill={INK} opacity="0.45">temp &gt; 0, n=10</text>
 
-      {/* Arrow 1 — slight bezier wobble for hand-drawn feel */}
-      <path d="M160 44 C180 43 192 45 212 44" stroke={ink} strokeWidth="1.5" strokeLinecap="round" />
-      <path d="M207 38.5 L215 44 L207 49.5" stroke={ink} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+      {/* Arrow 1 */}
+      <path d="M160 44 C180 43 192 45 212 44" stroke={GREEN} strokeWidth="1.5" strokeLinecap="round" />
+      <path d="M207 38.5 L215 44 L207 49.5" stroke={GREEN} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
 
       {/* Box 2 */}
-      <rect x="218" y="22" width="160" height="44" rx="1" stroke={ink} strokeWidth="1.5" fill="white" />
-      <rect x="221" y="25" width="160" height="44" rx="1" stroke={ghost} strokeWidth="1" fill="none" />
-      <text x="298" y="42" textAnchor="middle" fontFamily={MONO} fontSize="10" fill={ink} fontWeight="700" letterSpacing="1">ENTROPY H(X)</text>
-      <text x="298" y="57" textAnchor="middle" fontFamily={MONO} fontSize="9" fill={ink} opacity="0.45">Shannon entropy</text>
+      <rect x="218" y="22" width="160" height="44" rx="1" stroke={TEAL} strokeWidth="1.5" fill="white" />
+      <rect x="221" y="25" width="160" height="44" rx="1" stroke={LIGHT} strokeWidth="1" fill="none" />
+      <text x="298" y="42" textAnchor="middle" fontFamily={MONO} fontSize="10" fill={TEAL} fontWeight="700" letterSpacing="1">ENTROPY H(X)</text>
+      <text x="298" y="57" textAnchor="middle" fontFamily={MONO} fontSize="9" fill={INK} opacity="0.45">Shannon entropy</text>
 
       {/* Arrow 2 */}
-      <path d="M380 44 C400 43 412 45 432 44" stroke={ink} strokeWidth="1.5" strokeLinecap="round" />
-      <path d="M427 38.5 L435 44 L427 49.5" stroke={ink} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M380 44 C400 43 412 45 432 44" stroke={GREEN} strokeWidth="1.5" strokeLinecap="round" />
+      <path d="M427 38.5 L435 44 L427 49.5" stroke={GREEN} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
 
       {/* Box 3 */}
-      <rect x="438" y="22" width="170" height="44" rx="1" stroke={ink} strokeWidth="1.5" fill="white" />
-      <rect x="441" y="25" width="170" height="44" rx="1" stroke={ghost} strokeWidth="1" fill="none" />
-      <text x="523" y="42" textAnchor="middle" fontFamily={MONO} fontSize="10" fill={ink} fontWeight="700" letterSpacing="1">CALIBRATED P</text>
-      <text x="523" y="57" textAnchor="middle" fontFamily={MONO} fontSize="9" fill={ink} opacity="0.45">entropy-weighted</text>
+      <rect x="438" y="22" width="170" height="44" rx="1" stroke={TEAL} strokeWidth="1.5" fill="white" />
+      <rect x="441" y="25" width="170" height="44" rx="1" stroke={LIGHT} strokeWidth="1" fill="none" />
+      <text x="523" y="42" textAnchor="middle" fontFamily={MONO} fontSize="10" fill={TEAL} fontWeight="700" letterSpacing="1">CALIBRATED P</text>
+      <text x="523" y="57" textAnchor="middle" fontFamily={MONO} fontSize="9" fill={INK} opacity="0.45">entropy-weighted</text>
 
       {/* Faint baseline */}
-      <line x1="8" y1="80" x2="608" y2="80" stroke={ink} strokeWidth="0.6" strokeDasharray="2 5" opacity="0.15" />
+      <line x1="8" y1="80" x2="608" y2="80" stroke={TEAL} strokeWidth="0.6" strokeDasharray="2 5" opacity="0.2" />
     </svg>
   );
 }
@@ -95,7 +95,7 @@ function PipelineDiagram() {
 export default function HowItWorks() {
   return (
     <section>
-      <h2 style={{ fontFamily: SERIF, fontSize: 28, color: INK, margin: "0 0 6px" }}>
+      <h2 style={{ fontFamily: SERIF, fontSize: 28, color: TEAL, margin: "0 0 6px" }}>
         How it works
       </h2>
       <p style={{ fontFamily: "Georgia, serif", fontSize: 13, color: INK_MID, margin: "0 0 32px" }}>
@@ -115,7 +115,7 @@ export default function HowItWorks() {
               <span style={{ fontSize: 22 }}>{card.icon}</span>
               <StatusTag status={card.status} />
             </div>
-            <h3 style={{ fontFamily: SERIF, fontSize: 16, color: INK, margin: 0 }}>
+            <h3 style={{ fontFamily: SERIF, fontSize: 16, color: TEAL, margin: 0 }}>
               {card.title}
             </h3>
             <p style={{ fontFamily: "Georgia, serif", fontSize: 13, color: INK_MID, lineHeight: 1.65, margin: 0 }}>

@@ -1,9 +1,11 @@
 "use client";
 
-const INK = "#1a2744";
-const INK_MID = "rgba(26,39,68,0.5)";
-const BORDER = "rgba(26,39,68,0.12)";
-const MONO = "var(--font-space-mono), 'Courier New', monospace";
+const INK     = "#1f2421";
+const INK_MID = "rgba(31,36,33,0.55)";
+const TEAL    = "#216869";
+const GREEN   = "#49a078";
+const BORDER  = "rgba(33,104,105,0.18)";
+const MONO    = "var(--font-space-mono), 'Courier New', monospace";
 
 type Prediction = {
   market_ticker: string;
@@ -13,31 +15,28 @@ type Prediction = {
   rationale: string;
 };
 
-/* Pencil-hatch swatch + percentage value */
 function ConfidenceCell({ p }: { p: number }) {
   const pct = (p * 100).toFixed(1);
   const spacing = p < 0.4 ? "3px" : p < 0.6 ? "5px" : "8px";
   return (
     <span style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: MONO, fontSize: 12, color: INK }}>
       <span style={{
-        display: "inline-block",
-        width: 26, height: 12,
-        border: `1.5px solid ${INK}`,
-        background: `repeating-linear-gradient(45deg, ${INK} 0px, ${INK} 1px, transparent 1px, transparent ${spacing})`,
+        display: "inline-block", width: 26, height: 12,
+        border: `1.5px solid ${GREEN}`,
+        background: `repeating-linear-gradient(45deg, ${GREEN} 0px, ${GREEN} 1px, transparent 1px, transparent ${spacing})`,
       }} />
       {pct}%
     </span>
   );
 }
 
-/* Entropy: underline+bold for low (well-calibrated), plain for high, italic for fallback */
 function EntropyCell({ entropy }: { entropy: number | null }) {
   if (entropy === null)
     return <span style={{ fontFamily: "Georgia, serif", fontSize: 12, color: INK_MID, fontStyle: "italic" }}>fallback uniform</span>;
   const isLow = entropy < 0.005;
   return (
     <span style={{
-      fontFamily: MONO, fontSize: 12, color: INK,
+      fontFamily: MONO, fontSize: 12, color: GREEN,
       fontWeight: isLow ? 700 : 400,
       textDecoration: isLow ? "underline" : "none",
       textUnderlineOffset: "3px",
@@ -49,20 +48,17 @@ function EntropyCell({ entropy }: { entropy: number | null }) {
 
 export default function PredictionsTable({ predictions }: { predictions: Prediction[] }) {
   return (
-    <div style={{ overflowX: "auto", border: `1.5px solid ${BORDER}`, background: "#ffffff", boxShadow: "2px 4px 16px rgba(140,100,40,0.07)" }}>
+    <div style={{ overflowX: "auto", border: `1.5px solid ${BORDER}`, background: "#ffffff", boxShadow: "2px 4px 16px rgba(33,104,105,0.07)" }}>
       <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
         <thead>
-          <tr style={{ borderBottom: `1.5px solid ${BORDER}`, background: "rgba(26,39,68,0.025)" }}>
+          <tr style={{ borderBottom: `1.5px solid ${BORDER}`, background: "rgba(33,104,105,0.04)" }}>
             {["Event Ticker", "P(yes)", "Entropy Score", "Weight", "Status"].map((h, i) => (
               <th key={h} style={{
                 padding: "10px 20px",
                 textAlign: i === 0 ? "left" : "center",
-                fontFamily: MONO,
-                fontSize: 9,
-                fontWeight: 700,
-                letterSpacing: "2px",
-                textTransform: "uppercase",
-                color: INK_MID,
+                fontFamily: MONO, fontSize: 9, fontWeight: 700,
+                letterSpacing: "2px", textTransform: "uppercase",
+                color: TEAL,
               }}>
                 {h}
               </th>
@@ -75,11 +71,11 @@ export default function PredictionsTable({ predictions }: { predictions: Predict
               key={pred.market_ticker}
               style={{
                 borderBottom: `1px solid ${BORDER}`,
-                background: i % 2 === 0 ? "#ffffff" : "rgba(26,39,68,0.018)",
+                background: i % 2 === 0 ? "#ffffff" : "rgba(33,104,105,0.025)",
                 cursor: "default",
               }}
-              onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.background = "rgba(26,39,68,0.045)")}
-              onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.background = i % 2 === 0 ? "#ffffff" : "rgba(26,39,68,0.018)")}
+              onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.background = "rgba(156,197,161,0.18)")}
+              onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.background = i % 2 === 0 ? "#ffffff" : "rgba(33,104,105,0.025)")}
             >
               <td style={{ padding: "12px 20px", fontFamily: MONO, fontSize: 11, color: INK }}>
                 {pred.market_ticker}
